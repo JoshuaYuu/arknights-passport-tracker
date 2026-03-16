@@ -21,7 +21,7 @@
 
 ## 在线访问
 
-**GitHub 仓库**: https://github.com/JoshuaYuu/arknights-passport-tracker
+**应用地址**: https://ohdvvlu6sgbec.ok.kimi.link/
 
 ## 技术栈
 
