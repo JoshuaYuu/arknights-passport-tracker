@@ -50,6 +50,34 @@
 - Node.js 20+
 - npm 或 yarn
 
+### 环境变量配置
+
+复制 `.env.example` 为 `.env` 并填入真实配置：
+
+```bash
+cp .env.example .env
+```
+
+需要配置的环境变量：
+
+| 变量名 | 说明 |
+|--------|------|
+| `VITE_SUPABASE_URL` | Supabase 项目 URL |
+| `VITE_SUPABASE_ANON_KEY` | Supabase 匿名密钥 |
+| `VITE_EMAILJS_SERVICE_ID` | EmailJS 服务 ID |
+| `VITE_EMAILJS_TEMPLATE_ID` | EmailJS 找回密码模板 ID |
+| `VITE_EMAILJS_RESET_TEMPLATE_ID` | EmailJS 重置令牌模板 ID |
+| `VITE_EMAILJS_PUBLIC_KEY` | EmailJS 公钥 |
+
+### 小程序云函数环境变量
+
+在微信开发者工具或云开发控制台配置以下环境变量：
+
+| 变量名 | 说明 |
+|--------|------|
+| `SUPABASE_URL` | Supabase 项目域名（不含 https://） |
+| `SUPABASE_ANON_KEY` | Supabase 匿名密钥 |
+
 ### 安装依赖
 ```bash
 npm install
@@ -64,6 +92,14 @@ npm run dev
 ```bash
 npm run build
 ```
+
+### 数据库迁移
+
+首次部署或升级时，需要在 Supabase SQL Editor 中依次执行 `supabase/migrations/` 目录下的 SQL 脚本：
+
+1. `001_password_hash.sql` — 密码哈希迁移（添加字段 + 创建 RPC 函数）
+2. `002_changelog_rls.sql` — changelog 表 RLS 策略
+3. `003_users_rls.sql` — users 表安全加固
 
 ## 项目结构
 

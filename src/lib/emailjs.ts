@@ -1,28 +1,31 @@
 import emailjs from '@emailjs/browser';
 
-// EmailJS 配置
-const EMAILJS_SERVICE_ID = 'service_a4xyw3v';
-const EMAILJS_TEMPLATE_ID = 'template_7eq8nkk';
-const EMAILJS_PUBLIC_KEY = 'FNisI_hwpo0DFKlND';
+// EmailJS 配置（从环境变量读取）
+const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || '';
+const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || '';
+const EMAILJS_RESET_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_RESET_TEMPLATE_ID || '';
+const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || '';
 
 // 初始化 EmailJS
-emailjs.init(EMAILJS_PUBLIC_KEY);
+if (EMAILJS_PUBLIC_KEY) {
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
 
-// 发送密码邮件
-export const sendPasswordEmail = async (toEmail: string, username: string, password: string) => {
+// 发送密码重置令牌邮件（替代原来的明文密码邮件）
+export const sendResetTokenEmail = async (toEmail: string, username: string, resetToken: string) => {
   try {
     const templateParams = {
-      email: toEmail,         // 收件人邮箱
-      to_email: toEmail,      // 备用变量名
-      username: username,     // 用户名
-      password: password,     // 密码
+      email: toEmail,
+      to_email: toEmail,
+      username: username,
+      reset_token: resetToken,
       app_name: '明日方舟通行证统计',
-      login_url: 'https://ohdvvlu6sgbec.ok.kimi.link'
+      login_url: window.location.origin
     };
     
     const result = await emailjs.send(
       EMAILJS_SERVICE_ID,
-      EMAILJS_TEMPLATE_ID,
+      EMAILJS_RESET_TEMPLATE_ID || EMAILJS_TEMPLATE_ID,
       templateParams
     );
     
@@ -31,6 +34,14 @@ export const sendPasswordEmail = async (toEmail: string, username: string, passw
     console.error('EmailJS error:', error);
     return { success: false, error: error?.text || error?.message || '发送失败' };
   }
+};
+
+// 保留旧函数签名以兼容（但不再发送明文密码）
+// @deprecated 使用 sendResetTokenEmail 替代
+export const sendPasswordEmail = async (toEmail: string, username: string, _password: string) => {
+  // 为兼容旧调用，内部转发到重置令牌流程
+  const resetToken = Math.random().toString().slice(2, 8);
+  return sendResetTokenEmail(toEmail, username, resetToken);
 };
 
 // 验证邮箱格式

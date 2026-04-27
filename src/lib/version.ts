@@ -1,8 +1,8 @@
 // 版本号配置
 export const VERSION = 'v1.5.0';
 
-// 版本历史记录
-export const CHANGELOG_HISTORY = [
+// 本地 fallback 数据（仅当 Supabase DB 中无 changelog 时使用）
+export const CHANGELOG_FALLBACK = [
   {
     version: 'v1.5.0',
     date: '2025-03-02',

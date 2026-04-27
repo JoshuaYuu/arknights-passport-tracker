@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Supabase 配置
-const SUPABASE_URL = 'https://xlegccilynwgqljdvgnk.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhsZWdjY2lseW53Z3FsamR2Z25rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIzNjY3OTQsImV4cCI6MjA4Nzk0Mjc5NH0.EGb61asBpHDsaxZHOq81XsmA46SqTWxK6eUYTMdvL0A';
+// Supabase 配置（从环境变量读取）
+const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || '';
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -12,6 +12,8 @@ export interface DBUser {
   username: string;
   email: string;
   password: string;
+  password_hashed: boolean;
+  reset_token?: string;
   is_admin: boolean;
   created_at: string;
 }
